@@ -1,0 +1,94 @@
+# This is an example shop, demonstrating the LimitedUses addon
+ShopName: LimitedUses
+DisplayName: '&4&lLimitedUses'
+Command: limiteduses
+signs:
+  text: '[LimitedUses]'
+  NeedPermissionToCreateSign: true
+shop:
+  Diamond:
+    MenuItem:
+    - type:DIAMOND
+    - amount:1
+    - name:&dDiamond
+    - 'lore1:&8You can purchase one diamond every ten hours.'
+    - 'lore2:&cPrice: %price%.'
+    RewardType: ITEM
+    Reward:
+    - - amount:1
+      - type:DIAMOND
+    PriceType: MONEY
+    Price: 150.0
+    Message: '&eYou bought a diamond for %price%.'
+    ExtraPermission: ''
+    InventoryLocation: 1
+    Condition:
+    - type:cooldown
+    - over:36000
+  Diamond_blocked:
+    MenuItem:
+    - type:BARRIER
+    - amount:1
+    - name:&f&lOut of stock
+    RewardType: NOTHING
+    PriceType: NOTHING
+    Message: '&8Come back in %cooldown_LimitedUses:Diamond%.'
+    ExtraPermission: ''
+    InventoryLocation: 1
+  StarterKit:
+    MenuItem:
+    - type:WOOD_PICKAXE
+    - amount:1
+    - name:&fStarter Kit
+    - 'lore:&8Click to receive your starter kit.'
+    RewardType: ITEM
+    Reward:
+    - - amount:1
+      - type:WOOD_PICKAXE
+    - - amount:1
+      - type:WOOD_SPADE
+    - - amount:1
+      - type:WOOD_AXE
+    - - amount:1
+      - type:WOOD_SWORD
+    - - amount:16
+      - type:TORCH
+    - - amount:32
+      - id:4
+    PriceType: NOTHING
+    Message: '&eReceived your starter kit.'
+    ExtraPermission: ''
+    InventoryLocation: 2
+    Condition:
+    - type:uses
+    - under:1
+  StarterKit_blocked:
+    MenuItem:
+    - type:BARRIER
+    - amount:1
+    - name:&f&lOut of stock
+    - 'lore:&cYou have already taken your starter kit.'
+    RewardType: NOTHING
+    PriceType: NOTHING
+    Message: ''
+    ExtraPermission: ''
+    InventoryLocation: 2
+  Obsidian:
+    MenuItem:
+    - type:OBSIDIAN
+    - amount:64
+    - name:&964 Obsidian
+    - 'lore1:&cPrice: 10000 Money'
+    - 'lore2:&cBought: &b%uses%&c/&b15 &ctimes.'
+    RewardType: ITEM
+    Reward:
+    - - type:OBSIDIAN
+      - amount:64
+    PriceType: MONEY
+    Price: 10000
+    Message: '&eYou bought %reward%! Money left: &c%left%'
+    ExtraPermission: ''
+    InventoryLocation: 3
+    Condition:
+    - type:uses
+    - under:15

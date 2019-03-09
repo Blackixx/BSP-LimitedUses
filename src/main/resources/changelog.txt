@@ -1,0 +1,37 @@
+v1.1.0
+*[NOTE] Still compatible with older Spigot builds (1.7 and above)
+*[UPDATE] Added Spigot 1.13.* support
+
+
+v1.0.5
+*[ADD] Added command to reset cooldown and uses of a certain shopitem for a specified player
+
+
+v1.0.4 (Needs BossShopPro v1.7.0 or higher)
+*[UPDATE] Updated to BossShopPro v1.7.0
+
+
+v1.0.3
+*[ADD] Added commands to modify the shopitem consume count of players, reset the data of a specific player or reset all data (creates a backup file).
+*[IMPROVE] Improved performance
+
+
+v1.0.2
+*[FIX] Fixed error that sometimes appeared when the server was shut down
+
+
+v1.0.1 (Needs BossShopPro v1.2.0 or higher):
+*[ADD] Added new time condition: cooldown/delay
+*[ADD] Updated placeholders (IMPORTANT: They are case-sensitive)
+** '%uses%' will display the amount of uses of the shopitem
+** '%uses_<shop name>:<shopitem name>%' will display the amount of uses of a specific shopitem anywhere
+** '%cooldown_<shop name>:<shopitem name>%' will display the time left until the given shopitem can be bought again by the player
+*[ADD] Added a LimitedUses example shop, which is included in the LimitedUses.jar
+
+Included a file converter that updates your storage to the new (better) layout. WARNING: The converter is not able to convert information related to shops that contain "-" in their name.
+If you happen to have affected shops you can manually fix your storage. One thing the converter does is replacing the separation symbol '-' with ":".
+That step will go wrong if your shop name or shopitem name contains "-". You can simply fix it by setting the ':' in your shop name or shopitem name back to "-".
+
+
+v1.0.0:
+* First release
