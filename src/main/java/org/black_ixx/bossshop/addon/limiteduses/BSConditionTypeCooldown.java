@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class BSConditionTypeCooldown extends BSConditionTypeNumber {
 
-    private LimitedUsesManager manager;
+    private final LimitedUsesManager manager;
 
     public BSConditionTypeCooldown(LimitedUsesManager manager) {
         this.manager = manager;
@@ -28,10 +28,7 @@ public class BSConditionTypeCooldown extends BSConditionTypeNumber {
         return new String[]{"cooldown", "delay"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

@@ -1,11 +1,5 @@
 package org.black_ixx.bossshop.addon.limiteduses;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.api.BSAddonStorage;
 import org.black_ixx.bossshop.core.BSBuy;
@@ -15,13 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.*;
+
 public class LimitedUsesManager {
 
-    private LimitedUses plugin;
-    private BSAddonStorage storage;
-    private HashMap<UUID, List<String>> uses = new HashMap<UUID, List<String>>(); //includes cooldowns
-    private HashMap<UUID, List<String>> cooldowns = new HashMap<UUID, List<String>>();
+    private final LimitedUses plugin;
+    private final BSAddonStorage storage;
 
+    private final HashMap<UUID, List<String>> uses = new HashMap<UUID, List<String>>(); // includes cooldowns
+    private final HashMap<UUID, List<String>> cooldowns = new HashMap<UUID, List<String>>();
 
     public LimitedUsesManager(LimitedUses plugin) {
         this.plugin = plugin;
@@ -45,11 +41,9 @@ public class LimitedUsesManager {
         }
     }
 
-
     public void save() {
         storage.save();
     }
-
 
     public void resetAll() {
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -88,15 +82,16 @@ public class LimitedUsesManager {
         resetValue(p, shop, buy, uses);
     }
 
-
     public void loadPlayer(OfflinePlayer player) {
         loadPlayer(player, storage.getStringList("uses." + player.getUniqueId()), storage.getStringList("cooldowns." + player.getUniqueId()));
     }
 
     private void loadPlayer(OfflinePlayer player, List<String> uses, List<String> cooldowns) {
+
         if (uses != null & !uses.isEmpty()) {
             this.uses.put(player.getUniqueId(), uses);
         }
+
         if (cooldowns != null & !cooldowns.isEmpty()) {
             this.cooldowns.put(player.getUniqueId(), cooldowns);
         }
@@ -127,12 +122,10 @@ public class LimitedUsesManager {
         cooldowns.remove(player.getUniqueId());
     }
 
-
     public void unloadAll() {
         uses.clear();
         cooldowns.clear();
     }
-
 
     public long detectUsedAmount(OfflinePlayer p, String tag) {
         return detectValue(p, tag, uses, 0);
@@ -251,6 +244,4 @@ public class LimitedUsesManager {
         }
         return null;
     }
-
-
 }

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class BSConditionTypeUses extends BSConditionTypeNumber {
 
-    private LimitedUsesManager manager;
+    private final LimitedUsesManager manager;
 
     public BSConditionTypeUses(LimitedUsesManager manager) {
         this.manager = manager;

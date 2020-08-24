@@ -1,15 +1,12 @@
 package org.black_ixx.bossshop.addon.limiteduses;
 
-
 import org.black_ixx.bossshop.api.BossShopAddon;
 import org.bukkit.command.CommandSender;
 
 public class LimitedUses extends BossShopAddon {
 
-
     private BSListener listener;
     private LimitedUsesManager manager;
-
 
     @Override
     public String getAddonName() {
@@ -34,7 +31,6 @@ public class LimitedUses extends BossShopAddon {
         listener.enable();
     }
 
-
     @Override
     public void disableAddon() {
         listener.disable(); //includes saving
@@ -46,10 +42,7 @@ public class LimitedUses extends BossShopAddon {
         listener.enable();
     }
 
-
     public LimitedUsesManager getLimitedUsesManager() {
         return manager;
     }
-
-
 }

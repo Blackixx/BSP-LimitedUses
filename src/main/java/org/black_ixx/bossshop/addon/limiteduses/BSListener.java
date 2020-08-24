@@ -23,14 +23,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BSListener implements Listener {
 
-    private LimitedUses plugin;
-    private LimitedUsesManager manager;
+    private final LimitedUses plugin;
+    private final LimitedUsesManager manager;
 
     public BSListener(LimitedUses plugin, LimitedUsesManager manager) {
         this.plugin = plugin;
         this.manager = manager;
     }
-
 
     public void enable() {
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -45,7 +44,6 @@ public class BSListener implements Listener {
         manager.save();
         manager.unloadAll();
     }
-
 
     @EventHandler
     public void onRegisterTypes(BSRegisterTypesEvent e) {
@@ -117,7 +115,6 @@ public class BSListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         manager.loadPlayer(e.getPlayer());
@@ -135,7 +132,6 @@ public class BSListener implements Listener {
         }
         manager.unloadPlayer(e.getPlayer(), true, false);
     }
-
 
     public boolean hasConditionUses(BSBuy buy) {
         BSCondition condition = buy.getCondition();
@@ -168,6 +164,4 @@ public class BSListener implements Listener {
         }
         return null;
     }
-
-
 }
