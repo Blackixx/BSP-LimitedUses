@@ -28,10 +28,7 @@ public class BSConditionTypeUses extends BSConditionTypeNumber {
         return new String[]{"uses", "use", "consumes"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

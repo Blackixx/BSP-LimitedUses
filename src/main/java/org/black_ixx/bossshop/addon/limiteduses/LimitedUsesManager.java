@@ -158,17 +158,19 @@ public class LimitedUsesManager {
     }
 
     public long detectValue(OfflinePlayer p, String tag, HashMap<UUID, List<String>> map, long def) {
-        if (map.containsKey(p.getUniqueId())) {
-            List<String> used = map.get(p.getUniqueId());
-            for (String entry : used) {
-                if (entry.startsWith(tag)) {
-                    try {
-                        String value = entry.replace(tag + ":", "");
-                        return Long.parseLong(value);
-                    } catch (NumberFormatException e) {
-                        return def;
-                    }
-                }
+        if (!map.containsKey(p.getUniqueId()))
+            return def;
+
+        List<String> used = map.get(p.getUniqueId());
+
+        for (String entry : used) {
+            if (!entry.startsWith(tag)) continue;
+
+            try {
+                String value = entry.replace(tag + ":", "");
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                return def;
             }
         }
 

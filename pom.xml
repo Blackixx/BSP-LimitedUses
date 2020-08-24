@@ -4,7 +4,7 @@
 
     <groupId>BSP-LimitedUses</groupId>
     <artifactId>BSP-LimitedUses</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <name>LimitedUses</name>
     <description>Allows to limit the amount of uses of shop items.</description>

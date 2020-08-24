@@ -80,6 +80,7 @@ public class BSListener implements Listener {
                 long uses = manager.detectUsedAmount(p, event.getShop(), event.getShopItem());
                 text = text.replace("%uses%", String.valueOf(uses));
             }
+
             if (text.contains("%uses_")) {
                 String variable = StringManipulationLib.figureOutVariable(text, "uses", 0);
                 long uses = manager.detectUsedAmount(p, variable);
@@ -103,6 +104,26 @@ public class BSListener implements Listener {
                 }
             }
 
+            if (text.contains("%hascooldown_")) {
+                String variable = StringManipulationLib.figureOutVariable(text, "hascooldown", 0);
+                BSBuy buy = manager.getShopItem(variable);
+
+                if (buy != null) {
+                    long time = manager.detectLastUseDelay(p, buy.getShop(), buy);
+                    long time_to_wait = 0;
+
+                    BSSingleCondition c = getCondition(buy.getCondition(), "cooldown");
+                    if (c != null) {
+                        if (c.getConditionType().equalsIgnoreCase(">") || c.getConditionType().equalsIgnoreCase("over")) {
+                            time_to_wait = InputReader.getInt(c.getCondition(), 0) * 1000;
+                        }
+                    }
+
+                    long time_left = time_to_wait - time;
+                    text = text.replace("%hascooldown_" + variable + "%", time_left <= 0 ? "no" : "yes");
+                }
+            }
+
             event.setText(text);
         }
     }
@@ -110,7 +131,7 @@ public class BSListener implements Listener {
     @EventHandler
     public void checkString(BSCheckStringForFeaturesEvent event) {
         String s = event.getText();
-        if (s.contains("%uses%") || s.contains("%uses_") || s.contains("%cooldown_")) {
+        if (s.contains("%uses%") || s.contains("%uses_") || s.contains("%cooldown_") || s.contains("%hascooldown_")) {
             event.approveFeature();
         }
     }
@@ -144,21 +165,22 @@ public class BSListener implements Listener {
     }
 
     private BSSingleCondition getCondition(BSCondition condition, String conditiontype) {
-        if (condition != null) {
-            if (condition instanceof BSConditionSet) {
-                BSConditionSet set = (BSConditionSet) condition;
-                for (BSCondition c : set.getConditions()) {
-                    BSSingleCondition subcondition = getCondition(c, conditiontype);
-                    if (subcondition != null) {
-                        return subcondition;
-                    }
+        if (condition == null)
+            return null;
+
+        if (condition instanceof BSConditionSet) {
+            BSConditionSet set = (BSConditionSet) condition;
+            for (BSCondition c : set.getConditions()) {
+                BSSingleCondition subcondition = getCondition(c, conditiontype);
+                if (subcondition != null) {
+                    return subcondition;
                 }
-            } else {
-                if (condition instanceof BSSingleCondition) {
-                    BSSingleCondition c = (BSSingleCondition) condition;
-                    if (c.getType() == BSConditionType.detectType(conditiontype)) {
-                        return c;
-                    }
+            }
+        } else {
+            if (condition instanceof BSSingleCondition) {
+                BSSingleCondition c = (BSSingleCondition) condition;
+                if (c.getType() == BSConditionType.detectType(conditiontype)) {
+                    return c;
                 }
             }
         }
