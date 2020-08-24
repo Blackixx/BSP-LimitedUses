@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.addon.limiteduses;
 
 import org.black_ixx.bossshop.api.BossShopAddon;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 public class LimitedUses extends BossShopAddon {
@@ -24,6 +25,7 @@ public class LimitedUses extends BossShopAddon {
         manager = new LimitedUsesManager(this);
         listener = new BSListener(this, manager);
         getServer().getPluginManager().registerEvents(listener, this);
+        setupPlaceholders();
     }
 
     @Override
@@ -40,9 +42,17 @@ public class LimitedUses extends BossShopAddon {
     public void bossShopReloaded(CommandSender sender) {
         listener.disable(); //includes saving
         listener.enable();
+        setupPlaceholders();
     }
 
     public LimitedUsesManager getLimitedUsesManager() {
         return manager;
+    }
+
+    private void setupPlaceholders() {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new LimitedUsesExpansion(this).register();
+            Bukkit.getLogger().info("Registered PlaceholderAPI expansion.");
+        }
     }
 }

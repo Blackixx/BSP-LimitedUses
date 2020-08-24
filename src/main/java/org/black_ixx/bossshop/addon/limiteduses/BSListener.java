@@ -2,9 +2,6 @@ package org.black_ixx.bossshop.addon.limiteduses;
 
 
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.core.conditions.BSCondition;
-import org.black_ixx.bossshop.core.conditions.BSConditionSet;
-import org.black_ixx.bossshop.core.conditions.BSConditionType;
 import org.black_ixx.bossshop.core.conditions.BSSingleCondition;
 import org.black_ixx.bossshop.events.BSCheckStringForFeaturesEvent;
 import org.black_ixx.bossshop.events.BSPlayerPurchasedEvent;
@@ -54,12 +51,12 @@ public class BSListener implements Listener {
     @EventHandler
     public void onItemPurchased(BSPlayerPurchasedEvent e) {
         boolean b = false;
-        if (hasConditionUses(e.getShopItem())) {
+        if (ShopTools.hasConditionUses(e.getShopItem())) {
             manager.progressUse(e.getPlayer(), e.getShop(), e.getShopItem());
             b = true;
         }
 
-        if (hasConditionCooldown(e.getShopItem())) {
+        if (ShopTools.hasConditionCooldown(e.getShopItem())) {
             manager.progressCooldown(e.getPlayer(), e.getShop(), e.getShopItem());
             b = true;
         }
@@ -93,7 +90,7 @@ public class BSListener implements Listener {
                 if (buy != null) {
                     long time = manager.detectLastUseDelay(p, buy.getShop(), buy);
                     long time_to_wait = 0;
-                    BSSingleCondition c = getCondition(buy.getCondition(), "cooldown");
+                    BSSingleCondition c = ShopTools.getCondition(buy.getCondition(), "cooldown");
                     if (c != null) {
                         if (c.getConditionType().equalsIgnoreCase(">") || c.getConditionType().equalsIgnoreCase("over")) {
                             time_to_wait = InputReader.getInt(c.getCondition(), 0) * 1000;
@@ -112,7 +109,7 @@ public class BSListener implements Listener {
                     long time = manager.detectLastUseDelay(p, buy.getShop(), buy);
                     long time_to_wait = 0;
 
-                    BSSingleCondition c = getCondition(buy.getCondition(), "cooldown");
+                    BSSingleCondition c = ShopTools.getCondition(buy.getCondition(), "cooldown");
                     if (c != null) {
                         if (c.getConditionType().equalsIgnoreCase(">") || c.getConditionType().equalsIgnoreCase("over")) {
                             time_to_wait = InputReader.getInt(c.getCondition(), 0) * 1000;
@@ -152,38 +149,5 @@ public class BSListener implements Listener {
             return;
         }
         manager.unloadPlayer(e.getPlayer(), true, false);
-    }
-
-    public boolean hasConditionUses(BSBuy buy) {
-        BSCondition condition = buy.getCondition();
-        return getCondition(condition, "uses") != null;
-    }
-
-    public boolean hasConditionCooldown(BSBuy buy) {
-        BSCondition condition = buy.getCondition();
-        return getCondition(condition, "cooldown") != null;
-    }
-
-    private BSSingleCondition getCondition(BSCondition condition, String conditiontype) {
-        if (condition == null)
-            return null;
-
-        if (condition instanceof BSConditionSet) {
-            BSConditionSet set = (BSConditionSet) condition;
-            for (BSCondition c : set.getConditions()) {
-                BSSingleCondition subcondition = getCondition(c, conditiontype);
-                if (subcondition != null) {
-                    return subcondition;
-                }
-            }
-        } else {
-            if (condition instanceof BSSingleCondition) {
-                BSSingleCondition c = (BSSingleCondition) condition;
-                if (c.getType() == BSConditionType.detectType(conditiontype)) {
-                    return c;
-                }
-            }
-        }
-        return null;
     }
 }

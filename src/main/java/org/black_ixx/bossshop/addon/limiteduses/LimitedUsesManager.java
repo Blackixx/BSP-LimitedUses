@@ -232,6 +232,10 @@ public class LimitedUsesManager {
         return shop.getShopName() + ":" + item.getName();
     }
 
+    public BSShop getShop(String name) {
+        return ClassManager.manager.getShops().getShop(name);
+    }
+
     public BSBuy getShopItem(String tag) {
         if (tag != null) {
             String[] parts = tag.split(":", 2);
