@@ -5,6 +5,7 @@ author: Black_ixx
 website: http://felix.neuby.de
 main: org.black_ixx.bossshop.addon.limiteduses.LimitedUses
 depend: [BossShopPro]
+softdepend: [PlaceholderAPI]
 commands:
   limiteduses:
    description: Allows editing the shopitem consume count of players
