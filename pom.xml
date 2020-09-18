@@ -40,8 +40,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>devport</id>
-            <url>http://play.pvpcraft.cz:8081/repository/devport/</url>
+            <id>devport-public</id>
+            <url>http://play.pvpcraft.cz:8081/repository/devport-public/</url>
         </repository>
         <repository>
             <id>placeholderapi</id>
