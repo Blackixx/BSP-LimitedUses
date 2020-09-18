@@ -2,9 +2,6 @@ package org.black_ixx.bossshop.addon.limiteduses;
 
 
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.core.conditions.BSCondition;
-import org.black_ixx.bossshop.core.conditions.BSConditionSet;
-import org.black_ixx.bossshop.core.conditions.BSConditionType;
 import org.black_ixx.bossshop.core.conditions.BSSingleCondition;
 import org.black_ixx.bossshop.events.BSCheckStringForFeaturesEvent;
 import org.black_ixx.bossshop.events.BSPlayerPurchasedEvent;
@@ -23,14 +20,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BSListener implements Listener {
 
-    private LimitedUses plugin;
-    private LimitedUsesManager manager;
+    private final LimitedUses plugin;
+    private final LimitedUsesManager manager;
 
     public BSListener(LimitedUses plugin, LimitedUsesManager manager) {
         this.plugin = plugin;
         this.manager = manager;
     }
-
 
     public void enable() {
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -46,7 +42,6 @@ public class BSListener implements Listener {
         manager.unloadAll();
     }
 
-
     @EventHandler
     public void onRegisterTypes(BSRegisterTypesEvent e) {
         new BSConditionTypeUses(manager).register();
@@ -56,12 +51,12 @@ public class BSListener implements Listener {
     @EventHandler
     public void onItemPurchased(BSPlayerPurchasedEvent e) {
         boolean b = false;
-        if (hasConditionUses(e.getShopItem())) {
+        if (ShopTools.hasConditionUses(e.getShopItem())) {
             manager.progressUse(e.getPlayer(), e.getShop(), e.getShopItem());
             b = true;
         }
 
-        if (hasConditionCooldown(e.getShopItem())) {
+        if (ShopTools.hasConditionCooldown(e.getShopItem())) {
             manager.progressCooldown(e.getPlayer(), e.getShop(), e.getShopItem());
             b = true;
         }
@@ -82,6 +77,7 @@ public class BSListener implements Listener {
                 long uses = manager.detectUsedAmount(p, event.getShop(), event.getShopItem());
                 text = text.replace("%uses%", String.valueOf(uses));
             }
+
             if (text.contains("%uses_")) {
                 String variable = StringManipulationLib.figureOutVariable(text, "uses", 0);
                 long uses = manager.detectUsedAmount(p, variable);
@@ -94,7 +90,7 @@ public class BSListener implements Listener {
                 if (buy != null) {
                     long time = manager.detectLastUseDelay(p, buy.getShop(), buy);
                     long time_to_wait = 0;
-                    BSSingleCondition c = getCondition(buy.getCondition(), "cooldown");
+                    BSSingleCondition c = ShopTools.getCondition(buy.getCondition(), "cooldown");
                     if (c != null) {
                         if (c.getConditionType().equalsIgnoreCase(">") || c.getConditionType().equalsIgnoreCase("over")) {
                             time_to_wait = InputReader.getInt(c.getCondition(), 0) * 1000;
@@ -105,6 +101,26 @@ public class BSListener implements Listener {
                 }
             }
 
+            if (text.contains("%hascooldown_")) {
+                String variable = StringManipulationLib.figureOutVariable(text, "hascooldown", 0);
+                BSBuy buy = manager.getShopItem(variable);
+
+                if (buy != null) {
+                    long time = manager.detectLastUseDelay(p, buy.getShop(), buy);
+                    long time_to_wait = 0;
+
+                    BSSingleCondition c = ShopTools.getCondition(buy.getCondition(), "cooldown");
+                    if (c != null) {
+                        if (c.getConditionType().equalsIgnoreCase(">") || c.getConditionType().equalsIgnoreCase("over")) {
+                            time_to_wait = InputReader.getInt(c.getCondition(), 0) * 1000;
+                        }
+                    }
+
+                    long time_left = time_to_wait - time;
+                    text = text.replace("%hascooldown_" + variable + "%", time_left <= 0 ? "no" : "yes");
+                }
+            }
+
             event.setText(text);
         }
     }
@@ -112,11 +128,10 @@ public class BSListener implements Listener {
     @EventHandler
     public void checkString(BSCheckStringForFeaturesEvent event) {
         String s = event.getText();
-        if (s.contains("%uses%") || s.contains("%uses_") || s.contains("%cooldown_")) {
+        if (s.contains("%uses%") || s.contains("%uses_") || s.contains("%cooldown_") || s.contains("%hascooldown_")) {
             event.approveFeature();
         }
     }
-
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -135,39 +150,4 @@ public class BSListener implements Listener {
         }
         manager.unloadPlayer(e.getPlayer(), true, false);
     }
-
-
-    public boolean hasConditionUses(BSBuy buy) {
-        BSCondition condition = buy.getCondition();
-        return getCondition(condition, "uses") != null;
-    }
-
-    public boolean hasConditionCooldown(BSBuy buy) {
-        BSCondition condition = buy.getCondition();
-        return getCondition(condition, "cooldown") != null;
-    }
-
-    private BSSingleCondition getCondition(BSCondition condition, String conditiontype) {
-        if (condition != null) {
-            if (condition instanceof BSConditionSet) {
-                BSConditionSet set = (BSConditionSet) condition;
-                for (BSCondition c : set.getConditions()) {
-                    BSSingleCondition subcondition = getCondition(c, conditiontype);
-                    if (subcondition != null) {
-                        return subcondition;
-                    }
-                }
-            } else {
-                if (condition instanceof BSSingleCondition) {
-                    BSSingleCondition c = (BSSingleCondition) condition;
-                    if (c.getType() == BSConditionType.detectType(conditiontype)) {
-                        return c;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
 }
